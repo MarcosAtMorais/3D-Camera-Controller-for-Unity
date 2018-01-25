@@ -18,6 +18,10 @@ public class CameraControl : MonoBehaviour
     private float fieldOfViewTan;
     private float aspectRatio;
 
+    private const float NORMALIZE_FACTOR = 0.5f;
+
+    private Camera currentCamera;
+
     void Start()
     {
         CameraSetup();
@@ -25,7 +29,8 @@ public class CameraControl : MonoBehaviour
 
     void Update()
     {
-
+        CenterCamera();
+        GetMiddlePointBetween(firstObject: m_firstObject, secondObject: m_secondObject);
     }
 
     /**
@@ -33,10 +38,36 @@ public class CameraControl : MonoBehaviour
      * */
 
     private void CameraSetup() {
-        //Finding the aspect ratio (16:9, 16:10, 4:3...)
+        // Finding the aspect ratio (16:9, 16:10, 4:3...)
         aspectRatio = Screen.width / Screen.height;
 
-        //Getting the field of view (FOV) tangent
+        // Getting the field of view (FOV) tangent
         fieldOfViewTan = Mathf.Tan(Mathf.Deg2Rad * Camera.main.fieldOfView / 2.0f);
+
+        // Gets the current camera
+        currentCamera = Camera.main;
     }
+
+    /**
+     * Method that positions the camera in the right center position every frame per sec
+     */
+    private void CenterCamera() {
+        // Gets the now used camera's current position
+        Vector3 newCameraPosition = currentCamera.transform.position;
+
+        newCameraPosition.x = middlePoint.x;
+        currentCamera.transform.position = newCameraPosition;
+    }
+
+    /**
+     * Get current middle point between two objects using their positions based on Transforms
+     */
+
+    private void GetMiddlePointBetween(Transform firstObject, Transform secondObject) {
+        
+        Vector3 vectorBetweenObjects = secondObject.position - firstObject.position;
+        middlePoint = firstObject.position + NORMALIZE_FACTOR * vectorBetweenObjects;
+
+    }
+
 }
