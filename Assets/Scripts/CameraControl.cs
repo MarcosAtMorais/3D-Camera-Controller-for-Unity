@@ -9,6 +9,7 @@ public class CameraControl : MonoBehaviour
 
     // Points for distance observation
     private Vector3 middlePoint;
+    private Vector3 vectorBetweenObjects;
     private float distanceFromMiddlePoint;
     private float distanceBetweenObjects;
 
@@ -22,15 +23,15 @@ public class CameraControl : MonoBehaviour
 
     private Camera currentCamera;
 
-    void Start()
-    {
+    void Start() {
         CameraSetup();
     }
 
-    void Update()
-    {
+    void Update() {
         CenterCamera();
         GetMiddlePointBetween(firstObject: m_firstObject, secondObject: m_secondObject);
+        GetNewCameraDistance();
+        GetNewCameraPosition();
     }
 
     /**
@@ -64,10 +65,27 @@ public class CameraControl : MonoBehaviour
      */
 
     private void GetMiddlePointBetween(Transform firstObject, Transform secondObject) {
-        
-        Vector3 vectorBetweenObjects = secondObject.position - firstObject.position;
+        vectorBetweenObjects = secondObject.position - firstObject.position;
         middlePoint = firstObject.position + NORMALIZE_FACTOR * vectorBetweenObjects;
+    }
 
+    /**
+     * Calculates the new camera distance, which is going to be based on the FOV.
+     */
+
+    private void GetNewCameraDistance() {
+        distanceBetweenObjects = vectorBetweenObjects.magnitude;
+        cameraDistance = (distanceBetweenObjects / 2.0f/ aspectRatio) / fieldOfViewTan;
+    }
+
+    /*
+     * Normalizes the middle point // camera current position and 
+     * smoothifies the action based on the camera distance and the 
+     * Base Distance to Act.
+     */
+    private void GetNewCameraPosition() {
+        Vector3 normalizedPositionPoint = (currentCamera.transform.position - middlePoint).normalized;
+        currentCamera.transform.position = middlePoint + normalizedPositionPoint * (cameraDistance + m_baseDistanceToAct);
     }
 
 }
