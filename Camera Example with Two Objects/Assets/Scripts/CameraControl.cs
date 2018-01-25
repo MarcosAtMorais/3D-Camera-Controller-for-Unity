@@ -5,7 +5,7 @@ public class CameraControl : MonoBehaviour
     // Inspector member objects
     public Transform m_firstObject;
     public Transform m_secondObject;
-    public float m_baseDistanceToAct = 10.0f;
+    [Range(0.0f, 100)]public float m_baseDistanceToAct = 10.0f;
 
     // Points for distance observation
     private Vector3 middlePoint;
