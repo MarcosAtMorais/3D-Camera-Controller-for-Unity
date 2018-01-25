@@ -20,12 +20,23 @@ public class CameraControl : MonoBehaviour
 
     void Start()
     {
-        aspectRatio = Screen.width / Screen.height;
-        fieldOfViewTan = Mathf.Tan(Mathf.Deg2Rad * Camera.main.fieldOfView / 2.0f);
+        CameraSetup();
     }
 
     void Update()
     {
 
+    }
+
+    /**
+     * Camera Settings methods.
+     * */
+
+    private void CameraSetup() {
+        //Finding the aspect ratio (16:9, 16:10, 4:3...)
+        aspectRatio = Screen.width / Screen.height;
+
+        //Getting the field of view (FOV) tangent
+        fieldOfViewTan = Mathf.Tan(Mathf.Deg2Rad * Camera.main.fieldOfView / 2.0f);
     }
 }
